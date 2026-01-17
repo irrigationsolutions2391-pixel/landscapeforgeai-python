@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from typing import Iterable
 from typing_extensions import Literal
 
@@ -23,8 +24,10 @@ from .._types import (
     Headers,
     NoneType,
     NotGiven,
+    BinaryTypes,
     FileContent,
     SequenceNotStr,
+    AsyncBinaryTypes,
     omit,
     not_given,
 )
@@ -54,7 +57,7 @@ class PetsResource(SyncAPIResource):
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/stainless-sdks/novaai2-jav-python#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/irrigationsolutions2391-pixel/landscapeforgeai-python#accessing-raw-response-data-eg-headers
         """
         return PetsResourceWithRawResponse(self)
 
@@ -63,7 +66,7 @@ class PetsResource(SyncAPIResource):
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/stainless-sdks/novaai2-jav-python#with_streaming_response
+        For more information, see https://www.github.com/irrigationsolutions2391-pixel/landscapeforgeai-python#with_streaming_response
         """
         return PetsResourceWithStreamingResponse(self)
 
@@ -355,7 +358,7 @@ class PetsResource(SyncAPIResource):
     def upload_image(
         self,
         pet_id: int,
-        image: FileContent,
+        image: FileContent | BinaryTypes,
         *,
         additional_metadata: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -382,7 +385,7 @@ class PetsResource(SyncAPIResource):
         extra_headers = {"Content-Type": "application/octet-stream", **(extra_headers or {})}
         return self._post(
             f"/pet/{pet_id}/uploadImage",
-            body=read_file_content(image),
+            content=read_file_content(image) if isinstance(image, os.PathLike) else image,
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -403,7 +406,7 @@ class AsyncPetsResource(AsyncAPIResource):
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/stainless-sdks/novaai2-jav-python#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/irrigationsolutions2391-pixel/landscapeforgeai-python#accessing-raw-response-data-eg-headers
         """
         return AsyncPetsResourceWithRawResponse(self)
 
@@ -412,7 +415,7 @@ class AsyncPetsResource(AsyncAPIResource):
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/stainless-sdks/novaai2-jav-python#with_streaming_response
+        For more information, see https://www.github.com/irrigationsolutions2391-pixel/landscapeforgeai-python#with_streaming_response
         """
         return AsyncPetsResourceWithStreamingResponse(self)
 
@@ -704,7 +707,7 @@ class AsyncPetsResource(AsyncAPIResource):
     async def upload_image(
         self,
         pet_id: int,
-        image: FileContent,
+        image: FileContent | AsyncBinaryTypes,
         *,
         additional_metadata: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -731,7 +734,7 @@ class AsyncPetsResource(AsyncAPIResource):
         extra_headers = {"Content-Type": "application/octet-stream", **(extra_headers or {})}
         return await self._post(
             f"/pet/{pet_id}/uploadImage",
-            body=await async_read_file_content(image),
+            content=await async_read_file_content(image) if isinstance(image, os.PathLike) else image,
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
